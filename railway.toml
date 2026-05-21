@@ -1,21 +1,12 @@
-services:
-  api:
-    image: node:20-alpine
-    build:
-      context: .
-    variables:
-      NODE_ENV: production
-      MONGODB_URI: ${{ MONGO_URL }}
-    port: 3000
-    command: npm start
+[services]
+[services.api]
+name = "api"
+dockerfile = "./Dockerfile"
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+port = 3000
 
-  mongodb:
-    image: mongo:latest
-    variables:
-      MONGO_INITDB_DATABASE: hopital-pourtales
-    volumes:
-      - mongodb_data:/data/db
-    port: 27017
+[services.api.variables]
+NODE_ENV = "production"
+MONGODB_URI = "mongodb+srv://nathanmaulini167_db_user:z5SfFNxe2PQJHnXt@cluster0.y6ghewc.mongodb.net/hopital-pourtales?appName=Cluster0"
 
-volumes:
-  mongodb_data:
