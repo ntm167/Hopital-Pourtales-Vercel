@@ -1,29 +1,52 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 📦 Stockage temporaire (en mémoire)
-let actualites = [
-  {
-    id: 1,
-    titre: "Bienvenue",
-    contenu: "Bienvenue sur l'intranet de l'Hôpital Pourtalès!",
-    auteur: "Admin",
-    date: new Date().toLocaleDateString('fr-FR')
-  }
-];
+// ========================================
+// 🗄️  MONGODB CONNECTION
+// ========================================
+let mongoConnected = false;
 
-let visites = [
-  {
-    id: 1,
-    titre: "Visite médicale",
-    date: "2024-05-25",
-    couleur: "event-blue"
-  }
-];
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/hopital-pourtales')
+  .then(() => {
+    mongoConnected = true;
+    console.log('✅ MongoDB connecté');
+  })
+  .catch(err => {
+    console.error('❌ Erreur MongoDB:', err);
+  });
+
+// ========================================
+// 📋 SCHEMAS MONGOOSE
+// ========================================
+
+// Actualités Schema
+const actuSchema = new mongoose.Schema({
+  titre: { type: String, required: true },
+  contenu: { type: String, required: true },
+  auteur: { type: String, default: 'Admin' },
+  date: String,
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
+});
+
+// Visites Schema
+const visiteSchema = new mongoose.Schema({
+  titre: { type: String, required: true },
+  date: { type: String, required: true },
+  couleur: { type: String, default: 'event-blue' },
+  description: String,
+  created_at: { type: Date, default: Date.now }
+});
+
+// Models
+const Actualite = mongoose.model('Actualite', actuSchema);
+const Visite = mongoose.model('Visite', visiteSchema);
 
 // ✅ HOME
 app.get('/', (req, res) => {
@@ -104,28 +127,41 @@ app.get('/api/health', (req, res) => {
 });
 
 // ✅ STATS
-app.get('/api/stats', (req, res) => {
-  res.json({
-    success: true,
-    stats: {
-      actualites: actualites.length,
-      visites: visites.length,
-      timestamp: new Date().toISOString()
-    }
-  });
+app.get('/api/stats', async (req, res) => {
+  try {
+    const actuCount = await Actualite.countDocuments();
+    const visiteCount = await Visite.countDocuments();
+
+    res.json({
+      success: true,
+      stats: {
+        actualites: actuCount,
+        visites: visiteCount,
+        mongodb: mongoConnected ? 'connected' : 'disconnected',
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // ✅ ACTUALITÉS - GET ALL
-app.get('/api/actualites', (req, res) => {
-  res.json({
-    success: true,
-    data: actualites,
-    count: actualites.length
-  });
+app.get('/api/actualites', async (req, res) => {
+  try {
+    const actualites = await Actualite.find().sort({ created_at: -1 });
+    res.json({
+      success: true,
+      data: actualites,
+      count: actualites.length
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // ✅ ACTUALITÉS - POST (CREATE)
-app.post('/api/actualites', (req, res) => {
+app.post('/api/actualites', async (req, res) => {
   try {
     const { titre, contenu, auteur } = req.body;
 
@@ -136,16 +172,14 @@ app.post('/api/actualites', (req, res) => {
       });
     }
 
-    const actu = {
-      id: Date.now(),
+    const actu = new Actualite({
       titre,
       contenu,
       auteur: auteur || 'Admin',
-      date: new Date().toLocaleDateString('fr-FR'),
-      created_at: new Date().toISOString()
-    };
+      date: new Date().toLocaleDateString('fr-FR')
+    });
 
-    actualites.push(actu);
+    await actu.save();
 
     res.status(201).json({
       success: true,
@@ -161,24 +195,21 @@ app.post('/api/actualites', (req, res) => {
 });
 
 // ✅ ACTUALITÉS - DELETE
-app.delete('/api/actualites/:id', (req, res) => {
+app.delete('/api/actualites/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    const index = actualites.findIndex(a => a.id === id);
+    const deleted = await Actualite.findByIdAndDelete(req.params.id);
 
-    if (index === -1) {
+    if (!deleted) {
       return res.status(404).json({
         success: false,
         error: 'Actualité non trouvée'
       });
     }
 
-    const deleted = actualites.splice(index, 1);
-
     res.json({
       success: true,
       message: 'Actualité supprimée avec succès',
-      data: deleted[0]
+      data: deleted
     });
   } catch (error) {
     res.status(500).json({
@@ -189,16 +220,21 @@ app.delete('/api/actualites/:id', (req, res) => {
 });
 
 // ✅ VISITES - GET ALL
-app.get('/api/visites', (req, res) => {
-  res.json({
-    success: true,
-    data: visites,
-    count: visites.length
-  });
+app.get('/api/visites', async (req, res) => {
+  try {
+    const visites = await Visite.find().sort({ date: 1 });
+    res.json({
+      success: true,
+      data: visites,
+      count: visites.length
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // ✅ VISITES - POST (CREATE)
-app.post('/api/visites', (req, res) => {
+app.post('/api/visites', async (req, res) => {
   try {
     const { titre, date, couleur, description } = req.body;
 
@@ -209,16 +245,14 @@ app.post('/api/visites', (req, res) => {
       });
     }
 
-    const visite = {
-      id: Date.now(),
+    const visite = new Visite({
       titre,
       date,
       couleur: couleur || 'event-blue',
-      description: description || '',
-      created_at: new Date().toISOString()
-    };
+      description: description || ''
+    });
 
-    visites.push(visite);
+    await visite.save();
 
     res.status(201).json({
       success: true,
@@ -234,24 +268,21 @@ app.post('/api/visites', (req, res) => {
 });
 
 // ✅ VISITES - DELETE
-app.delete('/api/visites/:id', (req, res) => {
+app.delete('/api/visites/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    const index = visites.findIndex(v => v.id === id);
+    const deleted = await Visite.findByIdAndDelete(req.params.id);
 
-    if (index === -1) {
+    if (!deleted) {
       return res.status(404).json({
         success: false,
         error: 'Visite non trouvée'
       });
     }
 
-    const deleted = visites.splice(index, 1);
-
     res.json({
       success: true,
       message: 'Visite supprimée avec succès',
-      data: deleted[0]
+      data: deleted
     });
   } catch (error) {
     res.status(500).json({
