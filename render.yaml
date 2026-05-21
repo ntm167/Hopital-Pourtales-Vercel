@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hopital-pourtales-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    port: 3000
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        value: mongodb+srv://nathanmaulini167_db_user:z5SfFNxe2PQJHnXt@cluster0.y6ghewc.mongodb.net/hopital-pourtales?appName=Cluster0
