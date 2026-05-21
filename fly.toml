@@ -1,0 +1,19 @@
+# Fly.io configuration
+app = "hopital-pourtales"
+primary_region = "cdg"
+
+[build]
+  dockerfile = "./Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  MONGODB_URI = "mongodb+srv://nathanmaulini167_db_user:z5SfFNxe2PQJHnXt@cluster0.y6ghewc.mongodb.net/hopital-pourtales?appName=Cluster0"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3000
+  ports = [{ port = 80, handlers = ["http"] }, { port = 443, handlers = ["tls", "http"] }]
