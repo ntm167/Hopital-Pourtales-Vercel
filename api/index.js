@@ -311,4 +311,6 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Export pour Vercel
 module.exports = app;
+
