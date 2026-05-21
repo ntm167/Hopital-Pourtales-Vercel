@@ -1,0 +1,21 @@
+services:
+  api:
+    image: node:20-alpine
+    build:
+      context: .
+    variables:
+      NODE_ENV: production
+      MONGODB_URI: ${{ MONGO_URL }}
+    port: 3000
+    command: npm start
+
+  mongodb:
+    image: mongo:latest
+    variables:
+      MONGO_INITDB_DATABASE: hopital-pourtales
+    volumes:
+      - mongodb_data:/data/db
+    port: 27017
+
+volumes:
+  mongodb_data:
