@@ -3,42 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hôpital Pourtalès - Intranet Professionnel</title>
+  <title>Hôpital Pourtalès - Intranet Complet</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --primary: #0066cc;
       --primary-dark: #004a99;
       --primary-light: #e6f2ff;
+      --secondary: #00b4d8;
       --success: #28a745;
       --warning: #ffc107;
       --danger: #dc3545;
       --light: #f8f9fa;
+      --dark: #212529;
       --gray: #6c757d;
-      --border: #dee2e6;
-      --text: #212529;
-      --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      --white: #ffffff;
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
       --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+      --radius: 8px;
     }
 
-    html {
-      scroll-behavior: smooth;
+    body.dark-mode {
+      --light: #1a1a1a;
+      --dark: #f0f0f0;
+      --white: #2a2a2a;
+      --gray: #b0b0b0;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--dark);
       background: var(--light);
       line-height: 1.6;
+      transition: all 0.3s ease;
     }
 
+    /* HEADER */
     header {
-      background: white;
+      background: var(--white);
       box-shadow: var(--shadow);
       position: sticky;
       top: 0;
@@ -47,30 +50,20 @@
 
     .header-top {
       background: var(--primary);
-      color: white;
-      padding: 0.75rem 0;
-      font-size: 0.9rem;
-    }
-
-    .header-top-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 2rem;
+      color: var(--white);
+      padding: 0.5rem 2rem;
+      font-size: 0.85rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .header-main {
-      padding: 1.5rem 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .header-content {
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 2rem;
     }
 
     .logo {
@@ -78,617 +71,1312 @@
       align-items: center;
       gap: 1rem;
       text-decoration: none;
-      color: var(--text);
+      color: var(--dark);
+      font-weight: 700;
     }
 
     .logo-icon {
-      font-size: 2.5rem;
+      font-size: 2rem;
+      background: var(--primary-light);
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius);
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 50px;
-      height: 50px;
-      background: var(--primary-light);
-      border-radius: 8px;
     }
 
-    .logo-text h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 0;
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--white);
+      border-right: 1px solid #eee;
+      overflow-y: auto;
+      padding-top: 80px;
+      z-index: 999;
     }
 
-    .logo-text p {
-      font-size: 0.85rem;
-      color: var(--gray);
-      margin: 0;
+    .sidebar-menu {
+      list-style: none;
     }
 
-    .header-nav {
-      display: flex;
-      gap: 2rem;
-      align-items: center;
+    .sidebar-item {
+      margin: 0.5rem 0;
     }
 
-    .nav-link {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      padding: 0.5rem 0;
-      border-bottom: 2px solid transparent;
-      transition: all 0.3s ease;
-    }
-
-    .nav-link:hover, .nav-link.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    .user-profile {
+    .sidebar-link {
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding-left: 2rem;
-      border-left: 1px solid var(--border);
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    .breadcrumb {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-
-    .breadcrumb a {
-      color: var(--primary);
+      padding: 0.75rem 1.5rem;
+      color: var(--dark);
       text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      border-left: 3px solid transparent;
     }
 
-    .breadcrumb a:hover {
-      text-decoration: underline;
+    .sidebar-link:hover, .sidebar-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-left-color: var(--primary);
     }
 
-    .dashboard-header {
+    .sidebar-link span { font-size: 1.2rem; }
+
+    /* MAIN */
+    main {
+      margin-left: 280px;
+      padding: 2rem;
+      min-height: calc(100vh - 80px);
+    }
+
+    /* PAGE */
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* PAGE HEADER */
+    .page-header {
       margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .dashboard-header h2 {
+    .page-header h1 {
       font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      color: var(--dark);
     }
 
-    .dashboard-header p {
-      color: var(--gray);
-      font-size: 1rem;
+    .page-header-actions {
+      display: flex;
+      gap: 1rem;
     }
 
-    .kpi-grid {
+    /* CARDS GRID */
+    .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
 
-    .kpi-card {
-      background: white;
-      border-radius: 8px;
+    /* CARD */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
       padding: 1.5rem;
       box-shadow: var(--shadow);
-      transition: all 0.3s ease;
-      border-top: 4px solid var(--primary);
+      transition: all 0.3s;
     }
 
-    .kpi-card:hover {
+    .card:hover {
       box-shadow: var(--shadow-lg);
       transform: translateY(-4px);
     }
 
-    .kpi-header {
+    .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--light);
     }
 
-    .kpi-title {
-      font-size: 0.9rem;
-      color: var(--gray);
+    .card-title {
+      font-size: 1.2rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: var(--dark);
     }
 
-    .kpi-icon {
-      font-size: 1.8rem;
+    /* KPI */
+    .kpi-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    .kpi-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
     }
 
     .kpi-value {
       font-size: 2.5rem;
       font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
     }
 
-    .kpi-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
-
-    .kpi-trend {
-      color: var(--success);
-      font-weight: 600;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    @media (max-width: 1024px) {
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: white;
-      border-radius: 8px;
-      padding: 2rem;
-      box-shadow: var(--shadow);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid var(--light);
-    }
-
-    .card-header-icon {
-      font-size: 1.8rem;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary-light);
-      border-radius: 8px;
-    }
-
-    .card-header h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .feature-list {
-      list-style: none;
-    }
-
-    .feature-list li {
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--light);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: background 0.3s ease;
-      padding-left: 1rem;
-      margin-left: -1rem;
-      padding-right: 1rem;
-      margin-right: -1rem;
-    }
-
-    .feature-list li:last-child {
-      border-bottom: none;
-    }
-
-    .feature-list li:hover {
-      background: var(--light);
-      border-radius: 6px;
-    }
-
-    .feature-list li::before {
-      content: "✓";
-      color: var(--success);
-      font-weight: 700;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .endpoint-list {
-      list-style: none;
-    }
-
-    .endpoint {
-      padding: 0.8rem;
-      margin: 0.5rem 0;
-      background: var(--light);
-      border-left: 3px solid var(--primary);
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
+    .kpi-change {
       font-size: 0.85rem;
-      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+      opacity: 0.8;
     }
 
-    .endpoint:hover {
-      background: var(--primary-light);
-      border-left-color: var(--primary-dark);
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    .method-badge {
-      display: inline-block;
-      padding: 0.25rem 0.6rem;
-      border-radius: 3px;
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--light);
+    }
+
+    th {
+      background: var(--light);
       font-weight: 600;
-      font-size: 0.75rem;
-      margin-right: 0.5rem;
-      letter-spacing: 0.5px;
+      color: var(--dark);
     }
 
-    .method-badge.get {
-      background: #d4edda;
-      color: #155724;
+    tr:hover {
+      background: var(--light);
     }
 
-    .method-badge.post {
-      background: #d1ecf1;
-      color: #0c5460;
-    }
-
-    .method-badge.delete {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .button-group {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    @media (max-width: 768px) {
-      .button-group {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    button {
-      padding: 0.9rem 1.5rem;
+    /* BUTTON */
+    button, .btn {
+      padding: 0.75rem 1.5rem;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius);
       background: var(--primary);
-      color: white;
+      color: var(--white);
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       font-size: 0.95rem;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 0.5rem;
     }
 
-    button:hover {
+    button:hover, .btn:hover {
       background: var(--primary-dark);
       transform: translateY(-2px);
       box-shadow: var(--shadow-lg);
     }
 
-    button:active {
-      transform: translateY(0);
-    }
+    .btn-secondary { background: var(--secondary); }
+    .btn-secondary:hover { background: #0098c0; }
 
-    footer {
-      background: var(--text);
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: 4rem;
-      font-size: 0.9rem;
-    }
+    .btn-success { background: var(--success); }
+    .btn-success:hover { background: #218838; }
 
-    footer a {
-      color: #0066cc;
-      text-decoration: none;
-    }
+    .btn-danger { background: var(--danger); }
+    .btn-danger:hover { background: #c82333; }
 
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+    .btn-small {
       padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* FORM */
+    form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    input, textarea, select {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 1rem;
+      background: var(--white);
+      color: var(--dark);
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .form-group {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    /* BADGE */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
     }
 
-    .status-badge.success {
-      background: #d4edda;
-      color: #155724;
+    .badge-success { background: #d4edda; color: #155724; }
+    .badge-warning { background: #fff3cd; color: #856404; }
+    .badge-danger { background: #f8d7da; color: #721c24; }
+    .badge-info { background: #d1ecf1; color: #0c5460; }
+    .badge-primary { background: var(--primary-light); color: var(--primary); }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
     }
 
-    .status-badge.error {
-      background: #f8d7da;
-      color: #721c24;
+    .modal.active {
+      display: flex;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
+    .modal-content {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--light);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    /* CHART PLACEHOLDER */
+    .chart-container {
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, #f0f0f0 100%);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      font-weight: 600;
+    }
+
+    /* ALERT */
+    .alert {
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      border-left: 4px solid;
+    }
+
+    .alert-success { background: #d4edda; border-color: #28a745; color: #155724; }
+    .alert-warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+    .alert-danger { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .alert-info { background: #d1ecf1; border-color: #17a2b8; color: #0c5460; }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-box {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-top: 0.5rem;
+    }
+
+    /* TIMELINE */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-left: 3px solid var(--primary-light);
+      position: relative;
+    }
+
+    .timeline-item:before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 0;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      display: inline-block;
-      animation: pulse 2s infinite;
+      background: var(--primary);
     }
 
-    .dot.success {
-      background: #28a745;
+    /* TOGGLE */
+    .toggle {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      background: #ccc;
+      border-radius: 28px;
+      cursor: pointer;
+      transition: all 0.3s;
     }
 
-    .dot.error {
-      background: #dc3545;
+    .toggle.active {
+      background: var(--success);
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s;
     }
 
+    .toggle.active::after {
+      left: 24px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--white);
+      border-top: 1px solid #eee;
+      padding: 2rem;
+      text-align: center;
+      color: var(--gray);
+      margin-left: 280px;
+      margin-top: 2rem;
+    }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        gap: 1rem;
+      .sidebar {
+        width: 200px;
       }
 
-      .header-nav {
-        width: 100%;
+      main, footer {
+        margin-left: 0;
+      }
+
+      .header-main {
         flex-wrap: wrap;
-        gap: 1rem;
       }
 
-      .user-profile {
-        border-left: none;
-        padding-left: 0;
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      main {
-        padding: 1rem;
+      .card-grid {
+        grid-template-columns: 1fr;
       }
+    }
 
-      .dashboard-header h2 {
-        font-size: 1.5rem;
-      }
+    /* NOTIFICATION */
+    .notification {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      max-width: 400px;
+      z-index: 2001;
+      animation: slideIn 0.3s ease;
+    }
 
-      .kpi-value {
-        font-size: 2rem;
-      }
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .notification.success { border-left: 4px solid var(--success); }
+    .notification.error { border-left: 4px solid var(--danger); }
+
+    /* PROGRESS */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress {
+      height: 100%;
+      background: var(--primary);
+      width: 0;
+      transition: width 0.3s;
+    }
+
+    /* AVATAR */
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .avatar.lg {
+      width: 80px;
+      height: 80px;
+      font-size: 1.5rem;
     }
   </style>
 </head>
 <body>
+  <!-- HEADER -->
   <header>
     <div class="header-top">
-      <div class="header-top-content">
-        <span>✓ Tous les services opérationnels</span>
-        <span>Support: support@hopital-pourtales.fr</span>
+      <span>✓ Tous les services opérationnels | Statut: En ligne | Support: support@hopital.fr</span>
+      <div style="display: flex; gap: 1rem;">
+        <button onclick="toggleDarkMode()" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;">🌙 Dark Mode</button>
+        <div style="cursor: pointer;" onclick="showNotification('Bienvenue!', 'success')">🔔</div>
       </div>
     </div>
-
     <div class="header-main">
-      <div class="header-content">
-        <a href="#" class="logo">
-          <div class="logo-icon">🏥</div>
-          <div class="logo-text">
-            <h1>Hôpital Pourtalès</h1>
-            <p>Système d'Information</p>
-          </div>
-        </a>
-
-        <nav class="header-nav">
-          <a href="#" class="nav-link active">Accueil</a>
-          <a href="#" class="nav-link">Actualités</a>
-          <a href="#" class="nav-link">Calendrier</a>
-          <a href="#" class="nav-link">Ressources</a>
-          <a href="#" class="nav-link">Contact</a>
-        </nav>
-
-        <div class="user-profile">
-          <div class="avatar">NM</div>
-          <div>
-            <div style="font-weight: 600;">Nathan M.</div>
-            <div style="font-size: 0.85rem; color: var(--gray);">Administrateur</div>
-          </div>
+      <a href="#" class="logo">
+        <div class="logo-icon">🏥</div>
+        <div>Hôpital Pourtalès</div>
+      </a>
+      <div style="display: flex; gap: 2rem; align-items: center; margin-left: auto;">
+        <div style="text-align: right;">
+          <div style="font-weight: 600;">Nathan M.</div>
+          <div style="font-size: 0.85rem; color: var(--gray);">Administrateur</div>
         </div>
+        <div class="avatar">NM</div>
       </div>
     </div>
   </header>
 
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item"><a class="sidebar-link active" onclick="switchPage('dashboard')"><span>📊</span>Dashboard</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('actualites')"><span>📰</span>Actualités</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('calendar')"><span>📅</span>Calendrier</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('planning')"><span>📍</span>Planning</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('utilisateurs')"><span>👥</span>Utilisateurs</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('ressources')"><span>📚</span>Ressources</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('documents')"><span>📄</span>Documents</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('messages')"><span>💬</span>Messages</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('reunion')"><span>🤝</span>Réunions</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('formation')"><span>🎓</span>Formations</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('faq')"><span>❓</span>FAQ</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('stats')"><span>📈</span>Statistiques</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('integration')"><span>🔌</span>Intégrations</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('parametres')"><span>⚙️</span>Paramètres</a></li>
+      <li class="sidebar-item"><a class="sidebar-link" onclick="switchPage('profil')"><span>👤</span>Profil</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
   <main>
-    <div class="breadcrumb">
-      <span>Accueil</span>
-      <span>/</span>
-      <span>Tableau de bord</span>
-    </div>
 
-    <div class="dashboard-header">
-      <h2>Tableau de bord</h2>
-      <p>Bienvenue sur votre système d'information. Toutes les statistiques clés à portée de main.</p>
-    </div>
-
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-title">Actualités</div>
-          <div class="kpi-icon">📰</div>
-        </div>
-        <div class="kpi-value">24</div>
-        <div class="kpi-footer">
-          <span>Mises à jour actives</span>
-          <span class="kpi-trend">↑ +3 cette semaine</span>
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="page active">
+      <div class="page-header">
+        <h1>📊 Dashboard</h1>
+        <div class="page-header-actions">
+          <button onclick="generateReport()">📥 Export Rapport</button>
+          <button onclick="refreshData()" class="btn-secondary">🔄 Rafraîchir</button>
         </div>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-title">Événements</div>
-          <div class="kpi-icon">🗓️</div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-number">24</div>
+          <div class="stat-label">Actualités</div>
         </div>
-        <div class="kpi-value">8</div>
-        <div class="kpi-footer">
-          <span>Prochainement</span>
-          <span class="kpi-trend">↑ +1 planifié</span>
+        <div class="stat-box">
+          <div class="stat-number">156</div>
+          <div class="stat-label">Utilisateurs</div>
         </div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-title">Utilisateurs</div>
-          <div class="kpi-icon">👥</div>
+        <div class="stat-box">
+          <div class="stat-number">42</div>
+          <div class="stat-label">Ressources</div>
         </div>
-        <div class="kpi-value">156</div>
-        <div class="kpi-footer">
-          <span>Connectés</span>
-          <span class="kpi-trend">✓ Tous actifs</span>
+        <div class="stat-box">
+          <div class="stat-number">99.9%</div>
+          <div class="stat-label">Disponibilité</div>
         </div>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <div class="kpi-title">Système</div>
-          <div class="kpi-icon">⚙️</div>
+      <div class="card-grid">
+        <div class="card kpi-card">
+          <div class="kpi-label">📈 Visiteurs Aujourd'hui</div>
+          <div class="kpi-value">1,234</div>
+          <div class="kpi-change">↑ 12% vs hier</div>
         </div>
-        <div class="kpi-value">99.9%</div>
-        <div class="kpi-footer">
-          <span>Disponibilité</span>
-          <span class="kpi-trend">✓ Optimal</span>
+        <div class="card kpi-card" style="background: linear-gradient(135deg, var(--secondary) 0%, #0098c0 100%);">
+          <div class="kpi-label">✅ Tâches Complétées</div>
+          <div class="kpi-value">89</div>
+          <div class="kpi-change">↑ 5% vs semaine passée</div>
         </div>
-      </div>
-    </div>
-
-    <div class="content-grid">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-header-icon">🔌</div>
-          <h3>Endpoints API</h3>
+        <div class="card kpi-card" style="background: linear-gradient(135deg, var(--success) 0%, #218838 100%);">
+          <div class="kpi-label">⭐ Satisfaction</div>
+          <div class="kpi-value">4.8/5</div>
+          <div class="kpi-change">↑ 0.2 pts</div>
         </div>
-        <ul class="endpoint-list">
-          <li class="endpoint">
-            <span class="method-badge get">GET</span> /api/actualites
-          </li>
-          <li class="endpoint">
-            <span class="method-badge post">POST</span> /api/actualites
-          </li>
-          <li class="endpoint">
-            <span class="method-badge get">GET</span> /api/visites
-          </li>
-          <li class="endpoint">
-            <span class="method-badge post">POST</span> /api/visites
-          </li>
-          <li class="endpoint">
-            <span class="method-badge get">GET</span> /api/stats
-          </li>
-          <li class="endpoint">
-            <span class="method-badge get">GET</span> /api/health
-          </li>
-        </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <div class="card-header-icon">✨</div>
-          <h3>Fonctionnalités</h3>
+          <div class="card-title">📊 Graphique Mensuel</div>
+          <button class="btn-small" onclick="changePeriod()">📅 Période</button>
         </div>
-        <ul class="feature-list">
-          <li>API REST complète et documentée</li>
-          <li>Base de données MongoDB sécurisée</li>
-          <li>Connexion HTTPS obligatoire</li>
-          <li>Gestion des actualités en temps réel</li>
-          <li>Calendrier des visites intégré</li>
-          <li>Statistiques et rapports</li>
-          <li>Interface responsive (mobile/desktop)</li>
-          <li>Déploiement sur infrastructure scalable</li>
-        </ul>
+        <div class="chart-container">Graphique - Données en temps réel</div>
+        <div class="progress-bar" style="margin-top: 2rem;"><div class="progress" style="width: 75%;"></div></div>
+        <div style="font-size: 0.9rem; color: var(--gray); margin-top: 0.5rem;">75% des objectifs complétés</div>
+      </div>
+
+      <div class="card" style="margin-top: 2rem;">
+        <div class="card-header">
+          <div class="card-title">⚡ Activités Récentes</div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>Nouvelle actualité publiée</strong>
+            <div style="font-size: 0.9rem; color: var(--gray); margin-top: 0.5rem;">Il y a 2 heures par Admin</div>
+          </div>
+          <div class="timeline-item">
+            <strong>5 utilisateurs ont rejoint</strong>
+            <div style="font-size: 0.9rem; color: var(--gray); margin-top: 0.5rem;">Il y a 4 heures</div>
+          </div>
+          <div class="timeline-item">
+            <strong>Maintenance système complétée</strong>
+            <div style="font-size: 0.9rem; color: var(--gray); margin-top: 0.5rem;">Il y a 6 heures</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="card" style="margin-top: 2rem;">
-      <div class="card-header">
-        <div class="card-header-icon">📊</div>
-        <h3>État du système</h3>
+    <!-- ACTUALITES -->
+    <div id="actualites" class="page">
+      <div class="page-header">
+        <h1>📰 Actualités</h1>
+        <button onclick="openModal('actuModal')">+ Nouvelle</button>
       </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
-        <div>
-          <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">API</div>
-          <div class="status-badge success">
-            <span class="dot success"></span>
-            Fonctionnelle
-          </div>
-        </div>
-        <div>
-          <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">MongoDB</div>
-          <div class="status-badge success">
-            <span class="dot success"></span>
-            Connectée
-          </div>
-        </div>
-        <div>
-          <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">Infrastructure</div>
-          <div class="status-badge success">
-            <span class="dot success"></span>
-            Stable
-          </div>
-        </div>
-      </div>
-
-      <div class="button-group">
-        <button onclick="alert('✓ Serveur opérationnel\nVersion: 2.1.0\nUptime: 99.9%\nLatence: 45ms')">
-          ✓ État du serveur
-        </button>
-        <button onclick="alert('✓ Actualités: 24\n✓ Événements: 8\n✓ Utilisateurs: 156\n✓ Disponibilité: 99.9%')">
-          📊 Statistiques
-        </button>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Auteur</th>
+              <th>Date</th>
+              <th>Catégorie</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Maintenance système</strong></td>
+              <td>Admin</td>
+              <td>21/05/2026</td>
+              <td><span class="badge badge-warning">Urgent</span></td>
+              <td><button class="btn-small" onclick="editItem()">✏️</button> <button class="btn-small btn-danger" onclick="deleteItem()">🗑️</button></td>
+            </tr>
+            <tr>
+              <td><strong>Nouvelle version 2.2</strong></td>
+              <td>Dev</td>
+              <td>20/05/2026</td>
+              <td><span class="badge badge-success">Général</span></td>
+              <td><button class="btn-small" onclick="editItem()">✏️</button> <button class="btn-small btn-danger" onclick="deleteItem()">🗑️</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+
+    <!-- CALENDAR -->
+    <div id="calendar" class="page">
+      <div class="page-header">
+        <h1>📅 Calendrier</h1>
+        <button onclick="openModal('eventModal')">+ Ajouter Événement</button>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📅 Janvier 2026</div>
+          </div>
+          <table style="width: 100%; text-align: center;">
+            <tr>
+              <td>L</td><td>M</td><td>M</td><td>J</td><td>V</td><td>S</td><td>D</td>
+            </tr>
+            <tr>
+              <td colspan="4"></td><td>1</td><td>2</td><td>3</td>
+            </tr>
+            <tr>
+              <td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+            </tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 Événements Prochains</div>
+          </div>
+          <div style="padding: 1rem;">
+            <div style="margin-bottom: 1rem; padding: 1rem; background: var(--light); border-radius: var(--radius);">
+              <strong>Réunion Directeur</strong>
+              <div style="font-size: 0.9rem; color: var(--gray);">25/05/2026 14:00</div>
+              <div style="margin-top: 0.5rem;"><span class="badge badge-primary">Salle 101</span></div>
+            </div>
+            <div style="margin-bottom: 1rem; padding: 1rem; background: var(--light); border-radius: var(--radius);">
+              <strong>Formation IT</strong>
+              <div style="font-size: 0.9rem; color: var(--gray);">28/05/2026 10:00</div>
+              <div style="margin-top: 0.5rem;"><span class="badge badge-success">En ligne</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLANNING -->
+    <div id="planning" class="page">
+      <div class="page-header">
+        <h1>📍 Planning</h1>
+        <button onclick="openModal('planningModal')">+ Nouveau Planning</button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Planning Hebdomadaire</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Personnel</th>
+              <th>Lundi</th>
+              <th>Mardi</th>
+              <th>Mercredi</th>
+              <th>Jeudi</th>
+              <th>Vendredi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Dr. Martin</strong></td>
+              <td><span class="badge badge-success">8h-16h</span></td>
+              <td><span class="badge badge-success">8h-16h</span></td>
+              <td><span class="badge badge-info">Repos</span></td>
+              <td><span class="badge badge-success">8h-16h</span></td>
+              <td><span class="badge badge-success">8h-16h</span></td>
+            </tr>
+            <tr>
+              <td><strong>Infirmière A.</strong></td>
+              <td><span class="badge badge-success">16h-00h</span></td>
+              <td><span class="badge badge-success">16h-00h</span></td>
+              <td><span class="badge badge-success">16h-00h</span></td>
+              <td><span class="badge badge-info">Repos</span></td>
+              <td><span class="badge badge-info">Repos</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- UTILISATEURS -->
+    <div id="utilisateurs" class="page">
+      <div class="page-header">
+        <h1>👥 Utilisateurs</h1>
+        <button onclick="openModal('userModal')">+ Ajouter Utilisateur</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Département</th>
+              <th>Rôle</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="avatar" style="display: inline-flex; margin-right: 0.5rem;">NM</div><strong>Nathan Maulini</strong></td>
+              <td>nathan@hopital.fr</td>
+              <td>IT</td>
+              <td><span class="badge badge-primary">Admin</span></td>
+              <td><span class="badge badge-success">Actif</span></td>
+              <td><button class="btn-small" onclick="editUser()">✏️</button></td>
+            </tr>
+            <tr>
+              <td><div class="avatar" style="display: inline-flex; margin-right: 0.5rem;">DM</div><strong>Dr. Martin</strong></td>
+              <td>martin@hopital.fr</td>
+              <td>Cardiologie</td>
+              <td><span class="badge badge-success">Médecin</span></td>
+              <td><span class="badge badge-success">Actif</span></td>
+              <td><button class="btn-small" onclick="editUser()">✏️</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESSOURCES -->
+    <div id="ressources" class="page">
+      <div class="page-header">
+        <h1>📚 Ressources</h1>
+        <button onclick="openModal('ressourceModal')">+ Ajouter Ressource</button>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📖 Guide de Sécurité</div>
+          </div>
+          <p>Documentation complète sur les protocoles de sécurité hospitalière.</p>
+          <div style="margin-top: 1rem;">
+            <button class="btn-small">📥 Télécharger</button>
+            <button class="btn-small" style="background: var(--secondary);">👁️ Aperçu</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">💻 Manuel IT</div>
+          </div>
+          <p>Guide pour l'utilisation des outils informatiques de l'hôpital.</p>
+          <div style="margin-top: 1rem;">
+            <button class="btn-small">📥 Télécharger</button>
+            <button class="btn-small" style="background: var(--secondary);">👁️ Aperçu</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🏥 Procédures Médicales</div>
+          </div>
+          <p>Protocoles et procédures médicales standardisées.</p>
+          <div style="margin-top: 1rem;">
+            <button class="btn-small">📥 Télécharger</button>
+            <button class="btn-small" style="background: var(--secondary);">👁️ Aperçu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div id="documents" class="page">
+      <div class="page-header">
+        <h1>📄 Documents</h1>
+        <button onclick="openModal('docModal')">+ Uploader Document</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th>Type</th>
+              <th>Date</th>
+              <th>Auteur</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>📄 Rapport Q1 2026</td>
+              <td>PDF</td>
+              <td>20/05/2026</td>
+              <td>Admin</td>
+              <td><button class="btn-small">📥</button> <button class="btn-small" style="background: var(--secondary);">👁️</button></td>
+            </tr>
+            <tr>
+              <td>📊 Budget Prévisionnel</td>
+              <td>Excel</td>
+              <td>15/05/2026</td>
+              <td>Finance</td>
+              <td><button class="btn-small">📥</button> <button class="btn-small" style="background: var(--secondary);">👁️</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div id="messages" class="page">
+      <div class="page-header">
+        <h1>💬 Messages</h1>
+      </div>
+      <div class="card-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-header">
+            <div class="card-title">📨 Boîte de Réception (5)</div>
+          </div>
+          <div style="padding: 1rem; border-bottom: 1px solid var(--light); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background=getComputedStyle(document.documentElement).getPropertyValue('--light')" onmouseout="this.style.background='transparent'">
+            <div><strong>Réunion urgente - Admin</strong></div>
+            <div style="font-size: 0.9rem; color: var(--gray);">Veuillez rejoindre la réunion immédiatement...</div>
+            <div style="font-size: 0.8rem; color: var(--gray); margin-top: 0.5rem;">Il y a 30 min</div>
+          </div>
+          <div style="padding: 1rem; border-bottom: 1px solid var(--light); cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background=getComputedStyle(document.documentElement).getPropertyValue('--light')" onmouseout="this.style.background='transparent'">
+            <div><strong>Nouvelle formation - RH</strong></div>
+            <div style="font-size: 0.9rem; color: var(--gray);">Une nouvelle formation en ligne est disponible...</div>
+            <div style="font-size: 0.8rem; color: var(--gray); margin-top: 0.5rem;">Il y a 2h</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REUNION -->
+    <div id="reunion" class="page">
+      <div class="page-header">
+        <h1>🤝 Réunions</h1>
+        <button onclick="openModal('reunionModal')">+ Planifier Réunion</button>
+      </div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Date/Heure</th>
+              <th>Lieu</th>
+              <th>Participants</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Réunion Directeur</strong></td>
+              <td>25/05/2026 14:00</td>
+              <td>Salle 101</td>
+              <td>8 personnes</td>
+              <td><button class="btn-small">👁️ Détails</button></td>
+            </tr>
+            <tr>
+              <td><strong>Team IT</strong></td>
+              <td>27/05/2026 10:00</td>
+              <td>En ligne - Teams</td>
+              <td>5 personnes</td>
+              <td><button class="btn-small">👁️ Détails</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FORMATION -->
+    <div id="formation" class="page">
+      <div class="page-header">
+        <h1>🎓 Formations</h1>
+        <button onclick="openModal('formationModal')">+ Nouvelle Formation</button>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🖥️ Formation IT Avancée</div>
+          </div>
+          <p>Durée: 40h | Niveau: Avancé | Instructeur: Claude</p>
+          <div style="margin-top: 1rem;">
+            <div class="progress-bar"><div class="progress" style="width: 60%;"></div></div>
+            <div style="font-size: 0.9rem;">60% complété</div>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem; width: 100%;">➡️ Continuer</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🏥 Protocoles Médicaux</div>
+          </div>
+          <p>Durée: 20h | Niveau: Intermédiaire | Instructeur: Dr. Martin</p>
+          <div style="margin-top: 1rem;">
+            <div class="progress-bar"><div class="progress" style="width: 30%;"></div></div>
+            <div style="font-size: 0.9rem;">30% complété</div>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem; width: 100%;">➡️ Continuer</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">💼 Leadership</div>
+          </div>
+          <p>Durée: 15h | Niveau: Débutant | Instructeur: RH</p>
+          <div style="margin-top: 1rem;">
+            <div class="progress-bar"><div class="progress" style="width: 100%;"></div></div>
+            <div style="font-size: 0.9rem;">✅ Complété</div>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem; width: 100%; background: var(--success);">🏆 Certificat</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div id="faq" class="page">
+      <div class="page-header">
+        <h1>❓ Questions Fréquentes</h1>
+      </div>
+      <div class="card">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--light); cursor: pointer;" onclick="toggleFAQ(this)">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong>Comment accéder au portail depuis l'extérieur?</strong>
+            <span>▼</span>
+          </div>
+          <div style="display: none; margin-top: 1rem; color: var(--gray);">
+            Vous pouvez accéder au portail depuis n'importe où en utilisant votre login et mot de passe. Une authentification à deux facteurs est disponible pour plus de sécurité.
+          </div>
+        </div>
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--light); cursor: pointer;" onclick="toggleFAQ(this)">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong>Comment gérer mon profil?</strong>
+            <span>▼</span>
+          </div>
+          <div style="display: none; margin-top: 1rem; color: var(--gray);">
+            Allez dans la section Profil pour gérer vos informations personnelles, votre photo, et vos préférences de notification.
+          </div>
+        </div>
+        <div style="padding: 1.5rem; cursor: pointer;" onclick="toggleFAQ(this)">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong>Comment signaler un problème technique?</strong>
+            <span>▼</span>
+          </div>
+          <div style="display: none; margin-top: 1rem; color: var(--gray);">
+            Contactez le support IT via le formulaire de support ou envoyez un email à support@hopital.fr
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATISTIQUES -->
+    <div id="stats" class="page">
+      <div class="page-header">
+        <h1>📈 Statistiques Avancées</h1>
+      </div>
+      <div class="card-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-header">
+            <div class="card-title">📊 Utilisation du Système</div>
+          </div>
+          <div class="chart-container">Graphique d'utilisation mensuelle</div>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">👥 Utilisateurs Actifs</div>
+          </div>
+          <div class="chart-container" style="height: 200px;">Graphique utilisateurs</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⏱️ Temps Moyen de Visite</div>
+          </div>
+          <div class="chart-container" style="height: 200px;">Graphique temps</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATIONEN -->
+    <div id="integration" class="page">
+      <div class="page-header">
+        <h1>🔌 Intégrations</h1>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Microsoft Teams</div>
+          </div>
+          <p>Intégration avec Microsoft Teams pour les réunions.</p>
+          <div style="margin-top: 1rem;">
+            <span class="badge badge-success">Connecté ✓</span>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem;">⚙️ Gérer</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Outlook / Exchange</div>
+          </div>
+          <p>Synchronisation du calendrier et des emails.</p>
+          <div style="margin-top: 1rem;">
+            <span class="badge badge-success">Connecté ✓</span>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem;">⚙️ Gérer</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Google Drive</div>
+          </div>
+          <p>Partage et collaboration sur les documents.</p>
+          <div style="margin-top: 1rem;">
+            <span class="badge badge-warning">En attente</span>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem;">🔗 Connecter</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Slack</div>
+          </div>
+          <p>Notifications et alertes en temps réel.</p>
+          <div style="margin-top: 1rem;">
+            <span class="badge badge-success">Connecté ✓</span>
+          </div>
+          <button class="btn-small" style="margin-top: 1rem;">⚙️ Gérer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARAMETRES -->
+    <div id="parametres" class="page">
+      <div class="page-header">
+        <h1>⚙️ Paramètres</h1>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚙️ Paramètres Système</div>
+        </div>
+        <form>
+          <div class="form-group">
+            <label>Thème</label>
+            <select>
+              <option>Clair (par défaut)</option>
+              <option>Sombre</option>
+              <option>Auto</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Langue</label>
+            <select>
+              <option>Français</option>
+              <option>Anglais</option>
+              <option>Allemand</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Notifications Email</label>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+              <span>Actives</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Authentification 2FA</label>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+              <span>Activée</span>
+            </div>
+          </div>
+          <button type="submit">💾 Sauvegarder</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PROFIL -->
+    <div id="profil" class="page">
+      <div class="page-header">
+        <h1>👤 Profil</h1>
+      </div>
+      <div class="card-grid">
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-header">
+            <div class="card-title">Mes Informations</div>
+            <button onclick="editProfile()">✏️ Modifier</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 100px 1fr; gap: 2rem; align-items: start;">
+            <div class="avatar lg">NM</div>
+            <div>
+              <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.9rem; color: var(--gray);">Nom Complet</div>
+                <div style="font-size: 1.1rem; font-weight: 600;">Nathan Maulini</div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.9rem; color: var(--gray);">Email</div>
+                <div style="font-size: 1.1rem; font-weight: 600;">nathan@hopital.fr</div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.9rem; color: var(--gray);">Département</div>
+                <div style="font-size: 1.1rem; font-weight: 600;">IT</div>
+              </div>
+              <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.9rem; color: var(--gray);">Rôle</div>
+                <div style="font-size: 1.1rem; font-weight: 600;"><span class="badge badge-primary">Administrateur</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Activité Récente</div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>Connexion</strong>
+            <div style="font-size: 0.9rem; color: var(--gray);">21/05/2026 09:30</div>
+          </div>
+          <div class="timeline-item">
+            <strong>Modification profil</strong>
+            <div style="font-size: 0.9rem; color: var(--gray);">20/05/2026 14:20</div>
+          </div>
+          <div class="timeline-item">
+            <strong>Création actualité</strong>
+            <div style="font-size: 0.9rem; color: var(--gray);">19/05/2026 11:45</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
+  <!-- MODALS -->
+  <div id="actuModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Nouvelle Actualité</h2>
+        <button class="close-btn" onclick="closeModal('actuModal')">✕</button>
+      </div>
+      <form onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label>Titre</label>
+          <input type="text" required>
+        </div>
+        <div class="form-group">
+          <label>Contenu</label>
+          <textarea required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select required>
+            <option>Général</option>
+            <option>Urgent</option>
+            <option>Événement</option>
+          </select>
+        </div>
+        <button type="submit">✅ Créer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
   <footer>
-    <p><strong>Hôpital Pourtalès</strong> - Système d'Information Professionnel</p>
-    <p style="margin-top: 0.5rem; color: #999;">Version 2.1.0 | Tous droits réservés © 2024 | <a href="#">Support technique</a> | <a href="#">Documentation</a></p>
+    <p><strong>Hôpital Pourtalès</strong> - Système d'Information Complet</p>
+    <p style="margin-top: 0.5rem; color: var(--gray);">Version 3.0.0 | Tous droits réservés © 2026 | Support: support@hopital.fr</p>
   </footer>
+
+  <script>
+    function switchPage(pageName) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageName).classList.add('active');
+      
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      event.target.closest('.sidebar-link').classList.add('active');
+      
+      window.scrollTo(0, 0);
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    function toggleFAQ(element) {
+      const answer = element.querySelector('div:last-child');
+      answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+      const arrow = element.querySelector('span:last-child');
+      arrow.style.transform = answer.style.display === 'block' ? 'rotate(180deg)' : 'rotate(0deg)';
+      arrow.style.transition = 'transform 0.3s';
+    }
+
+    function showNotification(title, type = 'success') {
+      const notif = document.createElement('div');
+      notif.className = `notification ${type}`;
+      notif.innerHTML = `<strong>${title}</strong><div>Cette est une notification de démonstration.</div>`;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+
+    function submitForm(e) {
+      e.preventDefault();
+      showNotification('Formulaire soumis avec succès!', 'success');
+      closeModal(e.target.closest('.modal').id);
+    }
+
+    function editItem() { showNotification('Édition...', 'info'); }
+    function deleteItem() { showNotification('Supprimé!', 'success'); }
+    function editUser() { showNotification('Édition utilisateur...', 'info'); }
+    function editProfile() { showNotification('Mode édition...', 'info'); }
+    function generateReport() { showNotification('Rapport généré!', 'success'); }
+    function refreshData() { showNotification('Données actualisées!', 'success'); }
+    function changePeriod() { showNotification('Période changée!', 'info'); }
+
+    // Charger le thème sombre si sauvegardé
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+
+    // Gestion des modals
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(modal.id);
+      });
+    });
+  </script>
 </body>
 </html>
